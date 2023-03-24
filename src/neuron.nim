@@ -27,7 +27,7 @@ func f_alpha(V_n, V_n1, I_n: float): float =
         -1.0
 
 
-func step(n: Neuron, I_ext: float): Neuron =
+func step*(n: Neuron, I_ext: float): Neuron =
     (
         V_n: f_alpha(n.V_n, n.V_n1, n.I_n + beta_e * I_ext),
         I_n: n.I_n - mu * (n.V_n + I_ext + sigma_1),

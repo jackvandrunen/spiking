@@ -4,27 +4,28 @@ import ./neuron
 
 
 const
-    gamma = 0.95  # TODO
     base = 0.88
     width = 0.24  # upper bound minus lower bound of the uniform random variable
 
 
 type
     Synapse* = tuple
-        V_rp: float
-        w: float
+        V_rp: float   # 0 AMPA, -1.1 for GABA
+        gamma: float  # it looks like anything from 0.6 to 0.96 is used in RTB 2004
+        w: float      # set this to 1 for testing? then a spike would approximately double the conductance
         g: float
         I_syn: float
 
 
-proc step(s: Synapse, preSpike: bool, postV: float): Synapse =
+proc step*(s: Synapse, preSpike: bool, postV: float): Synapse =
     (
         V_rp: s.V_rp,
+        gamma: s.gamma,
         w: s.w,
         g: (if preSpike:
-            gamma * s.g + (base + rand(width)) * s.g / s.w
+            s.gamma * s.g + (base + rand(width)) * s.g / s.w
         else:
-            gamma * s.g),
+            s.gamma * s.g),
         I_syn: -s.g * (postV - s.V_rp)
     )
 
